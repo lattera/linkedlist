@@ -45,6 +45,15 @@ void DeleteNode(LIST *list, LISTNODE *node)
 	if (!(list))
 		return;
 
+	if (node == list->nodes) {
+		list->nodes = node->next;
+
+		free(node->data);
+		free(node);
+
+		return;
+	}
+
 	del = list->nodes;
 	while (del != NULL && del->next != node)
 		del = del->next;
@@ -52,10 +61,7 @@ void DeleteNode(LIST *list, LISTNODE *node)
 	if (!(del))
 		return;
 
-	if (del == list->nodes)
-		list->nodes = del->next;
-	else
-		del->next = del->next->next;
+	del->next = del->next->next;
 	
 	free(node->data);
 	free(node);
