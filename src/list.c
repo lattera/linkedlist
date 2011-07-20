@@ -12,18 +12,18 @@ LISTNODE *AddNode(LIST *list, void *data, unsigned long sz)
 	if (!(list))
 		return NULL;
 
-	if (!(list->head)) {//uninitialized list! set up head & tail nodes.
+	if (!(list->head)) {/*uninitialized list! set up head & tail nodes.*/
 		list->head = malloc(sizeof(LISTNODE));
 		if (!(list->head))
 			return NULL;
-		list->tail = list->head; //initial degenerate case, head==tail.
+		list->tail = list->head; /*initial degenerate case, head==tail*/
 		node = list->tail;
 	} else {
-		list->tail->next = malloc(sizeof(LISTNODE));//make room for the next one
+		list->tail->next = malloc(sizeof(LISTNODE));/*make room for the next one*/
 		if (!(list->tail->next))
 			return NULL;
-		list->tail = list->tail->next; //tail must always point to the last node
-		node = list->tail; //tail is always the last node by definition
+		list->tail = list->tail->next; /*tail must always point to the last node*/
+		node = list->tail; /*tail is always the last node by definition*/
 	}
 	memset(node, 0x00, sizeof(LISTNODE));
 

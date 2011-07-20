@@ -17,7 +17,7 @@ void PrintList(LIST *list)
 		printf("[*] node[%u]\n", i);
 		printf("    sz:\t%lu\n", node->sz);
 		printf("    data:\t%s\n",(char *) node->data);
-		//printf("    data:\t%x\n",*(int *)(node->data));
+		/*printf("    data:\t%x\n",*(int *)(node->data));*/
 		node = node->next; i++;
 	}
 }
@@ -42,11 +42,12 @@ int main(int argc, char *argv[])
 	printf("list->head->next = \t%p\n", list->head->next);
 
 	FreeList(list);
-
-//	target = FindNodeByRef(list, list->tail->data);
-//	DeleteNode(list, target);
-//	target = FindNodeByRef(list, list->tail->data);
-//	DeleteNode(list, target);
+/*
+	target = FindNodeByRef(list, list->tail->data);
+	DeleteNode(list, target);
+	target = FindNodeByRef(list, list->tail->data);
+	DeleteNode(list, target);
+*/
 
 	free(list);
 	return 0;
