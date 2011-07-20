@@ -11,30 +11,44 @@ void PrintList(LIST *list)
 	LISTNODE *node;
 	
 	i = 0;
-	node = list->nodes;
+	node = list->head;
 
 	while ((node)) {
 		printf("[*] node[%u]\n", i);
-		printf("    sz:\t%u\n", node->sz);
-		printf("    data:\t%s\n", node->data);
+		printf("    sz:\t%lu\n", node->sz);
+		printf("    data:\t%s\n",(char *) node->data);
+		/*printf("    data:\t%x\n",*(int *)(node->data));*/
 		node = node->next; i++;
 	}
 }
 
 int main(int argc, char *argv[])
 {
-	char *p;
+	LISTNODE *target;
 	LIST *list;
+	int i;
+	char *p;
 
 	list = malloc(sizeof(LIST));
 	memset(list, 0x00, sizeof(LIST));
 
-	p = "This is a test";
-	AddNode(list, p, strlen(p)+1);
-	p = "Random cows happen to randomly moo randomly";
+	p="test1";
 	AddNode(list, p, strlen(p)+1);
 
-	PrintList(list);
+	p="test2";
+	AddNode(list, p, strlen(p)+1);
+	printf("list->head =\t%p\n", list->head);
+	printf("list->teail =\t%p\n", list->tail);
+	printf("list->head->next = \t%p\n", list->head->next);
 
+	FreeList(list);
+/*
+	target = FindNodeByRef(list, list->tail->data);
+	DeleteNode(list, target);
+	target = FindNodeByRef(list, list->tail->data);
+	DeleteNode(list, target);
+*/
+
+	free(list);
 	return 0;
 }

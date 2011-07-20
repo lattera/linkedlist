@@ -12,21 +12,18 @@ LISTNODE *AddNode(LIST *list, void *data, unsigned long sz)
 	if (!(list))
 		return NULL;
 
-	if (!(list->nodes)) {
-		list->nodes = malloc(sizeof(LISTNODE));
-		if (!(list->nodes))
+	if (!(list->head)) {/*uninitialized list! set up head & tail nodes.*/
+		list->head = malloc(sizeof(LISTNODE));
+		if (!(list->head))
 			return NULL;
-		node = list->nodes;
+		list->tail = list->head; /*initial degenerate case, head==tail*/
+		node = list->tail;
 	} else {
-		node = list->nodes;
-		while (node->next != NULL)
-			node = node->next;
-		node->next = malloc(sizeof(LISTNODE));
-
-		if (!(node->next))
+		list->tail->next = malloc(sizeof(LISTNODE));/*make room for the next one*/
+		if (!(list->tail->next))
 			return NULL;
-
-		node = node->next;
+		list->tail = list->tail->next; /*tail must always point to the last node*/
+		node = list->tail; /*tail is always the last node by definition*/
 	}
 	memset(node, 0x00, sizeof(LISTNODE));
 
@@ -45,8 +42,8 @@ void DeleteNode(LIST *list, LISTNODE *node)
 	if (!(list))
 		return;
 
-	if (node == list->nodes) {
-		list->nodes = node->next;
+	if (node == list->head) {
+		list->head = node->next;
 
 		free(node->data);
 		free(node);
@@ -54,12 +51,15 @@ void DeleteNode(LIST *list, LISTNODE *node)
 		return;
 	}
 
-	del = list->nodes;
+	del = list->head;
 	while (del != NULL && del->next != node)
 		del = del->next;
 
 	if (!(del))
 		return;
+	
+	if(del->next == list->tail)
+		list->tail = del;
 
 	del->next = del->next->next;
 	
@@ -74,7 +74,7 @@ LISTNODE *FindNodeByRef(LIST *list, void *data)
 	if (!(list))
 		return NULL;
 
-	node = list->nodes;
+	node = list->head;
 	while ((node)) {
 		if (node->data == data)
 			return node;
@@ -92,7 +92,7 @@ LISTNODE *FindNodeByValue(LIST *list, void *data, unsigned long sz)
 	if (!(list))
 		return NULL;
 
-	node = list->nodes;
+	node = list->head;
 	while ((node)) {
 		if (!memcmp(node->data, data, (sz > node->sz) ? node->sz : sz))
 			return node;
@@ -101,4 +101,28 @@ LISTNODE *FindNodeByValue(LIST *list, void *data, unsigned long sz)
 	}
 
 	return NULL;
+}
+
+/*frees all nodes in a list, including their data*/
+void FreeNodes(LIST *list, int FreeParameterAsWell)
+{
+	LISTNODE *node, *previous;
+	if(!(list))
+		return;
+	node = list->head;
+	while(node){
+		free(node->data);
+		previous = node;
+		node = node->next;
+		free(previous);
+	}
+	if(FreeParameterAsWell) free(list);
+	
+	return;
+}
+
+void FreeList(LIST *list)
+{
+	FreeNodes(list, 0);
+	return;
 }

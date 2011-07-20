@@ -9,12 +9,15 @@ typedef struct _listnode {
 } LISTNODE;
 
 typedef struct _list {
-	LISTNODE *nodes;
+	LISTNODE *head;
+	LISTNODE *tail;
 } LIST;
 
 LISTNODE *AddNode(LIST *, void *, unsigned long);
 void DeleteNode(LIST *, LISTNODE *);
 LISTNODE *FindNodeByRef(LIST *, void *);
 LISTNODE *FindNodeByValue(LIST *, void *, unsigned long);
+void FreeNodes(LIST *, int);
+void FreeList(LIST *);
 
 #endif
